@@ -22,7 +22,7 @@ public class Asteroid {
         this.radius = radius;
         setPosition((float) (Math.random() * (screenWidth - radius)) + radius, screenHeight + radius);
         this.dx = 0;
-        this.dy = -1;
+        this.dy = -10;
     }
 
     public void setPosition(float x, float y) {
@@ -44,7 +44,7 @@ public class Asteroid {
 
     public void update(float dt) {
             this.x += this.dx * dt;
-            this.x += this.dy * dt;
+            this.y += this.dy * dt;
         }
 
     public void draw(Canvas canvas, Paint paint) {

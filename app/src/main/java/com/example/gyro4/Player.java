@@ -59,6 +59,7 @@ public class Player {
     }
 
     public void updatePlayerGyroscope(float yAxisChange) {
+        yAxisChange *= 10;
         if (yAxisChange > 0) {
             if (direction.equals("left")) {
                 rightSpeed = 0;
@@ -77,9 +78,6 @@ public class Player {
             if (Math.abs(yAxisChange) > Math.abs(leftSpeed))
                 leftSpeed = yAxisChange;
         }
-        System.out.println("Current direction: " + direction);
-        System.out.println("Current right speed: " + rightSpeed);
-        System.out.println("Current left speed: " + leftSpeed);
     }
 
 

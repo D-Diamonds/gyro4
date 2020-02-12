@@ -12,6 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.gyro4.R;
@@ -36,6 +37,7 @@ public class GameState {
         this.screenWidth = view.findViewById(R.id.gameView).getWidth();
         this.screenHeight = view.findViewById(R.id.gameView).getHeight();
         this.player = new Player(this.screenWidth, this.screenHeight, this.screenWidth / 2 - 5, this.screenHeight / 2 - 5, 50);
+        this.asteroids = new ArrayList<>();
 
     }
 
@@ -48,10 +50,11 @@ public class GameState {
     }
 
     public void update(float dt) {
+        System.out.println(dt);
         asteroidSpawnTimer += dt;
         if (asteroidSpawnTimer > 5) {
             asteroids.add(new Asteroid(this.screenWidth, this.screenHeight, 25));
-            asteroidSpawnTimer = 0;
+            //asteroidSpawnTimer = 0;
         }
 
         for (Asteroid asteroid : asteroids)
