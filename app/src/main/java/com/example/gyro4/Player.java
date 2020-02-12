@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class Ball {
+public class Player {
 
     private float screenWidth;
     private float screenHeight;
@@ -20,7 +20,7 @@ public class Ball {
 
     private boolean frozen;
 
-    public Ball(float screenWidth, float screenHeight, float x, float y, float radius) {
+    public Player(float screenWidth, float screenHeight, float x, float y, float radius) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.radius = radius;
@@ -58,7 +58,7 @@ public class Ball {
         this.frozen = false;
     }
 
-    public void updateBallGyroscope(float yAxisChange) {
+    public void updatePlayerGyroscope(float yAxisChange) {
         if (yAxisChange > 0) {
             if (direction.equals("left")) {
                 rightSpeed = 0;

@@ -22,7 +22,7 @@ public class GameState {
     private int screenHeight;
     private View view;
     private Context context;
-    private Ball player;
+    private Player player;
 
 
     public GameState(View view, Context context) {
@@ -30,7 +30,7 @@ public class GameState {
         this.context = context;
         this.screenWidth = view.findViewById(R.id.gameView).getWidth();
         this.screenHeight = view.findViewById(R.id.gameView).getHeight();
-        this.player = new Ball(this.screenWidth, this.screenHeight, this.screenWidth / 2 - 5, this.screenHeight / 2 - 5, 50);
+        this.player = new Player(this.screenWidth, this.screenHeight, this.screenWidth / 2 - 5, this.screenHeight / 2 - 5, 50);
 
     }
 
@@ -38,7 +38,7 @@ public class GameState {
 
     }
 
-    public Ball getPlayer() {
+    public Player getPlayer() {
         return this.player;
     }
 
