@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.example.gyro4.R;
 
+import java.util.ArrayList;
+
 public class GameState {
 
     private int screenWidth;
@@ -23,6 +25,9 @@ public class GameState {
     private View view;
     private Context context;
     private Player player;
+
+    private ArrayList<Asteroid> asteroids;
+    private float asteroidSpawnTimer = 0;
 
 
     public GameState(View view, Context context) {
@@ -43,6 +48,15 @@ public class GameState {
     }
 
     public void update(float dt) {
+        asteroidSpawnTimer += dt;
+        if (asteroidSpawnTimer > 5) {
+            asteroids.add(new Asteroid(this.screenWidth, this.screenHeight, 25));
+            asteroidSpawnTimer = 0;
+        }
+
+        for (Asteroid asteroid : asteroids)
+            asteroid.update(dt);
+
         this.player.update(dt);
     }
 
@@ -50,5 +64,8 @@ public class GameState {
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawARGB(255, 255, 255, 255);
         this.player.draw(canvas, paint);
+
+        for (Asteroid asteroid : asteroids)
+            asteroid.draw(canvas, paint);
     }
 }
