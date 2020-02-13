@@ -41,7 +41,7 @@ public class GameThread extends Thread {
                 long time = System.nanoTime();
 
                 Canvas canvas = this.surfaceHolder.lockCanvas();
-                int dt = (int) ((time - this.lastTime) / 10000000);
+                float dt = ((time - this.lastTime) / 16666666.6667f);
                 if (canvas != null) {
                     this.gameState.update(dt);
                     this.gameState.draw(canvas, this.paint);

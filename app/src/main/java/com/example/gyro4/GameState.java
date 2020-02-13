@@ -12,9 +12,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.gyro4.R;
+
+import java.util.ArrayList;
 
 public class GameState {
 
@@ -22,7 +25,10 @@ public class GameState {
     private int screenHeight;
     private View view;
     private Context context;
-    private Ball player;
+    private Player player;
+
+    private ArrayList<Asteroid> asteroids;
+    private float asteroidSpawnTimer = 0;
 
 
     public GameState(View view, Context context) {
@@ -30,7 +36,8 @@ public class GameState {
         this.context = context;
         this.screenWidth = view.findViewById(R.id.gameView).getWidth();
         this.screenHeight = view.findViewById(R.id.gameView).getHeight();
-        this.player = new Ball(this.screenWidth, this.screenHeight, this.screenWidth / 2 - 5, this.screenHeight / 2 - 5, 50);
+        this.player = new Player(this.screenWidth, this.screenHeight, this.screenWidth / 2 - 5, this.screenHeight / 2 - 5, 50);
+        this.asteroids = new ArrayList<>();
 
     }
 
@@ -38,11 +45,21 @@ public class GameState {
 
     }
 
-    public Ball getPlayer() {
+    public Player getPlayer() {
         return this.player;
     }
 
     public void update(float dt) {
+        System.out.println(dt);
+        asteroidSpawnTimer += dt;
+        if (asteroidSpawnTimer > 5) {
+            asteroids.add(new Asteroid(this.screenWidth, this.screenHeight, 25));
+            //asteroidSpawnTimer = 0;
+        }
+
+        for (Asteroid asteroid : asteroids)
+            asteroid.update(dt);
+
         this.player.update(dt);
     }
 
@@ -50,5 +67,8 @@ public class GameState {
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawARGB(255, 255, 255, 255);
         this.player.draw(canvas, paint);
+
+        for (Asteroid asteroid : asteroids)
+            asteroid.draw(canvas, paint);
     }
 }
