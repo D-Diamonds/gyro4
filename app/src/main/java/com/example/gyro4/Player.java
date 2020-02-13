@@ -1,16 +1,20 @@
 package com.example.gyro4;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 public class Player {
 
-    private float screenWidth;
-    private float screenHeight;
-    private float radius;
-    private float x;
-    private float y;
+    private int screenWidth;
+    private int screenHeight;
+    private int width;
+    private int height;
+    private Bitmap sprite;
+    private int x;
+    private int y;
     private float dx;
     private float dy;
 
@@ -20,10 +24,13 @@ public class Player {
 
     private boolean frozen;
 
-    public Player(float screenWidth, float screenHeight, float x, float y, float radius) {
+
+    public Player(int screenWidth, int screenHeight, int x, int y, Bitmap bitmap) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        this.radius = radius;
+        this.sprite = bitmap;
+        this.width = bitmap.getWidth();
+        this.height = bitmap.getHeight();
         setPosition(x, y);
         this.dx = 0;
         this.dy = 0;
@@ -33,21 +40,9 @@ public class Player {
         this.frozen = false;
     }
 
-    public void setPosition(float x, float y) {
+    public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    public float getX() {
-        return this.x;
-    }
-
-    public float getY() {
-        return this.y;
-    }
-
-    public float getRadius() {
-        return this.radius;
     }
 
     public void freeze() {
@@ -59,7 +54,7 @@ public class Player {
     }
 
     public void updatePlayerGyroscope(float yAxisChange) {
-        yAxisChange *= 10;
+        yAxisChange *= 50;
         if (yAxisChange > 0) {
             if (direction.equals("left")) {
                 rightSpeed = 0;
@@ -80,6 +75,11 @@ public class Player {
         }
     }
 
+    public boolean collides(Object o) {
+        Popcorn p = (Popcorn) o;
+        return p.getX() > x && p.getX() + p.getWidth() < x + width && p.getY() + p.getHeight() > y && p.getY() < y + p.getHeight() + 2;
+    }
+
 
     public void update(float dt) {
 //        if (this.currentYRotation < -1)
@@ -89,13 +89,13 @@ public class Player {
 //        else
 //            this.dx = 0;
 
-        if (this.x - this.radius < 0) {
+        if (this.x < 0) {
             this.dx = 0;
-            this.x = this.radius;
+            this.x = 0;
         }
-        if (this.x + this.radius > this.screenWidth) {
+        if (this.x + this.width > this.screenWidth) {
             this.dx = 0;
-            this.x = this.screenWidth - this.radius;
+            this.x = this.screenWidth - this.width;
         }
 
         if (!this.frozen) {
@@ -107,7 +107,6 @@ public class Player {
     }
 
     public void draw(Canvas canvas, Paint paint) {
-        paint.setColor(Color.BLUE);
-        canvas.drawCircle(this.x, this.y, this.radius, paint);
+        canvas.drawBitmap(sprite, null, new Rect(x, y, x + width, y + height), paint);
     }
 }

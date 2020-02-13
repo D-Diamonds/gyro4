@@ -1,6 +1,8 @@
 package com.example.gyro4;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -17,7 +19,7 @@ import androidx.core.view.GestureDetectorCompat;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
-public class GameView extends SurfaceView implements SensorEventListener, View.OnTouchListener {
+public class GameView extends SurfaceView implements SensorEventListener, View.OnTouchListener, SurfaceHolder.Callback {
 
     private GameThread thread;
     private Context context;
@@ -32,6 +34,11 @@ public class GameView extends SurfaceView implements SensorEventListener, View.O
         this.setOnTouchListener(this);
         setFocusable(true);
         System.out.println(getWidth());
+
+        setBackgroundColor(Color.TRANSPARENT);
+        setZOrderOnTop(true);
+        getHolder().setFormat(PixelFormat.TRANSPARENT);
+
         this.post(new Runnable() {
             @Override
             public void run() {
@@ -101,4 +108,40 @@ public class GameView extends SurfaceView implements SensorEventListener, View.O
     public void setThread(GameThread thread) {
         this.thread = thread;
     }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        if (!thread.isAlive()) {
+            thread = new GameThread(getHolder(), getContext(), new Handler(){
+                @Override
+                public void publish(LogRecord record) {
+
+                }
+
+                @Override
+                public void flush() {
+
+                }
+
+                @Override
+                public void close() throws SecurityException {
+
+                }
+            }, getThis().getRootView());
+            thread.setRunning(true);
+            thread.start();
+        }
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        if (thread.isAlive()) {
+            thread.setRunning(false);
+        }
+    }
+
 }

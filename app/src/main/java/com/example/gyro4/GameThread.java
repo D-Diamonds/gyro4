@@ -1,6 +1,7 @@
 package com.example.gyro4;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
@@ -15,12 +16,14 @@ public class GameThread extends Thread {
     private Paint paint;
     private GameState gameState;
     private long lastTime;
+    private boolean running;
 
     public GameThread(SurfaceHolder holder, Context context, Handler handler, View view) {
         this.surfaceHolder = holder;
         this.paint = new Paint();
         this.gameState = new GameState(view, context);
         this.lastTime = System.nanoTime();
+        running = true;
     }
 
     public GameState getGameState() {
@@ -31,17 +34,21 @@ public class GameThread extends Thread {
         this.gameState = gameState;
     }
 
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
     @Override
     public void run() {
 
         try {
             if (Thread.interrupted())
                 throw new InterruptedException();
-            while (!Thread.currentThread().isInterrupted()) {
+            while (!Thread.currentThread().isInterrupted() && running) {
                 long time = System.nanoTime();
 
                 Canvas canvas = this.surfaceHolder.lockCanvas();
-                float dt = ((time - this.lastTime) / 16666666.6667f);
+                float dt = ((time - this.lastTime) / 1000000000f);
                 if (canvas != null) {
                     this.gameState.update(dt);
                     this.gameState.draw(canvas, this.paint);

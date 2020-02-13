@@ -1,21 +1,14 @@
 package com.example.gyro4;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.view.MotionEvent;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-
-import com.example.gyro4.R;
 
 import java.util.ArrayList;
 
@@ -27,8 +20,11 @@ public class GameState {
     private Context context;
     private Player player;
 
-    private ArrayList<Asteroid> asteroids;
-    private float asteroidSpawnTimer = 0;
+    private ArrayList<Popcorn> popcorns;
+    private Bitmap spriteBmap;
+    private float popcornSpawnTimer = 0;
+
+    private Bitmap[] popcornSprite;
 
 
     public GameState(View view, Context context) {
@@ -36,12 +32,10 @@ public class GameState {
         this.context = context;
         this.screenWidth = view.findViewById(R.id.gameView).getWidth();
         this.screenHeight = view.findViewById(R.id.gameView).getHeight();
-        this.player = new Player(this.screenWidth, this.screenHeight, this.screenWidth / 2 - 5, this.screenHeight / 2 - 5, 50);
-        this.asteroids = new ArrayList<>();
-
-    }
-
-    public void reset() {
+        popcornSprite = new Bitmap[]{BitmapFactory.decodeResource(context.getResources(), R.drawable.popcorn_1), BitmapFactory.decodeResource(context.getResources(), R.drawable.popcorn_2), BitmapFactory.decodeResource(context.getResources(), R.drawable.popcorn_3)};
+        spriteBmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty_bucket);
+        this.player = new Player(this.screenWidth, this.screenHeight, this.screenWidth / 2 - spriteBmap.getWidth() / 2, this.screenHeight - spriteBmap.getHeight() * 4 / 3, spriteBmap);
+        this.popcorns = new ArrayList<>();
 
     }
 
@@ -50,25 +44,35 @@ public class GameState {
     }
 
     public void update(float dt) {
-        System.out.println(dt);
-        asteroidSpawnTimer += dt;
-        if (asteroidSpawnTimer > 5) {
-            asteroids.add(new Asteroid(this.screenWidth, this.screenHeight, 25));
-            //asteroidSpawnTimer = 0;
+        popcornSpawnTimer += dt;
+        if (popcornSpawnTimer > 1.5) {
+            popcorns.add(new Popcorn(this.screenWidth, this.screenHeight, popcornSprite[(int) (Math.random() * popcornSprite.length)]));
+            popcornSpawnTimer = 0;
         }
 
-        for (Asteroid asteroid : asteroids)
-            asteroid.update(dt);
+        for (int i = 0; i < popcorns.size(); i++) {
+            popcorns.get(i).update(dt);
+            if (player.collides(popcorns.get(i))) {
+                popcorns.remove(i);
+                i--;
+                continue;
+            }
+            if (popcorns.get(i).getY() > this.screenHeight - spriteBmap.getHeight()) {
+                popcorns.remove(i);
+                i--;
+                continue;
+            }
+        }
 
         this.player.update(dt);
     }
 
 
     public void draw(Canvas canvas, Paint paint) {
-        canvas.drawARGB(255, 255, 255, 255);
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         this.player.draw(canvas, paint);
 
-        for (Asteroid asteroid : asteroids)
-            asteroid.draw(canvas, paint);
+        for (Popcorn popcorn : popcorns)
+            popcorn.draw(canvas, paint);
     }
 }
