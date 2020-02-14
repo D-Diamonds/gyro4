@@ -1,5 +1,6 @@
 package com.example.gyro4;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -13,13 +14,14 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.core.view.GestureDetectorCompat;
 
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
-public class GameView extends SurfaceView implements SensorEventListener, View.OnTouchListener, SurfaceHolder.Callback {
+public class GameView extends SurfaceView implements SensorEventListener, View.OnTouchListener {
 
     private GameThread thread;
     private Context context;
@@ -63,6 +65,15 @@ public class GameView extends SurfaceView implements SensorEventListener, View.O
         });
     }
 
+    public void setText(final int id, final String text) {
+        ((Activity) this.context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((TextView) ((Activity) context).findViewById(id)).setText(text);
+            }
+        });
+    }
+
     public void setGyroscopeSensor(Sensor gyroscopeSensor, SensorManager sensorManager) {
         this.gyroscopeSensor = gyroscopeSensor;
         this.sensorManager = sensorManager;
@@ -71,10 +82,10 @@ public class GameView extends SurfaceView implements SensorEventListener, View.O
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE && event.values[1] != 0) {
+        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE && event.values[2] != 0) {
             //System.out.println("(" + event.values[0] + ", " + event.values[1] + ", " + event.values[2] + ")");
             if (this.thread.getGameState() != null)
-                this.thread.getGameState().getPlayer().updatePlayerGyroscope(event.values[1]);
+                this.thread.getGameState().getPlayer().updatePlayerGyroscope(-event.values[2]);
 
         }
     }
@@ -109,39 +120,5 @@ public class GameView extends SurfaceView implements SensorEventListener, View.O
         this.thread = thread;
     }
 
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        if (!thread.isAlive()) {
-            thread = new GameThread(getHolder(), getContext(), new Handler(){
-                @Override
-                public void publish(LogRecord record) {
-
-                }
-
-                @Override
-                public void flush() {
-
-                }
-
-                @Override
-                public void close() throws SecurityException {
-
-                }
-            }, getThis().getRootView());
-            thread.setRunning(true);
-            thread.start();
-        }
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        if (thread.isAlive()) {
-            thread.setRunning(false);
-        }
-    }
 
 }

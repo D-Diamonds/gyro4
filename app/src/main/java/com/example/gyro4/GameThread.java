@@ -5,12 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 
 
 import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
-public class GameThread extends Thread {
+public class GameThread extends Thread implements SurfaceHolder.Callback {
 
     private SurfaceHolder surfaceHolder;
     private Paint paint;
@@ -40,7 +42,6 @@ public class GameThread extends Thread {
 
     @Override
     public void run() {
-
         try {
             if (Thread.interrupted())
                 throw new InterruptedException();
@@ -59,6 +60,25 @@ public class GameThread extends Thread {
         }
         catch (InterruptedException e) {
             System.out.println(e.toString());
+        }
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        if (!isAlive()) {
+            setRunning(true);
+            start();
+        }
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        if (isAlive()) {
+            setRunning(false);
         }
     }
 }

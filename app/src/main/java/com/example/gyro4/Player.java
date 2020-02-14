@@ -15,12 +15,14 @@ public class Player {
     private Bitmap sprite;
     private int x;
     private int y;
-    private float dx;
-    private float dy;
+
+    private enum Direction {
+        LEFT, RIGHT
+    }
 
     private float leftSpeed;
     private float rightSpeed;
-    private String direction;
+    private Direction direction;
 
     private boolean frozen;
 
@@ -32,11 +34,7 @@ public class Player {
         this.width = bitmap.getWidth();
         this.height = bitmap.getHeight();
         setPosition(x, y);
-        this.dx = 0;
-        this.dy = 0;
-        this.leftSpeed = 0;
-        this.rightSpeed = 0;
-        this.direction = "";
+        zeroSpeeds();
         this.frozen = false;
     }
 
@@ -53,25 +51,23 @@ public class Player {
         this.frozen = false;
     }
 
-    public void updatePlayerGyroscope(float yAxisChange) {
-        yAxisChange *= 50;
-        if (yAxisChange > 0) {
-            if (direction.equals("left")) {
-                rightSpeed = 0;
-                leftSpeed = 0;
+    public void updatePlayerGyroscope(float zAxisChange) {
+        zAxisChange *= 150;
+        if (zAxisChange > 0) {
+            if (direction == Direction.LEFT) {
+                zeroSpeeds();
             }
-            direction = "right";
-            if (yAxisChange > rightSpeed)
-                rightSpeed = yAxisChange;
+            direction = Direction.RIGHT;
+            if (zAxisChange > rightSpeed)
+                rightSpeed = zAxisChange;
         }
-        if (yAxisChange < 0) {
-            if (direction.equals("right")) {
-                leftSpeed = 0;
-                rightSpeed = 0;
+        if (zAxisChange < 0) {
+            if (direction == Direction.RIGHT) {
+                zeroSpeeds();
             }
-            direction = "left";
-            if (Math.abs(yAxisChange) > Math.abs(leftSpeed))
-                leftSpeed = yAxisChange;
+            direction = Direction.LEFT;
+            if (Math.abs(zAxisChange) > Math.abs(leftSpeed))
+                leftSpeed = zAxisChange;
         }
     }
 
@@ -80,28 +76,25 @@ public class Player {
         return p.getX() > x && p.getX() + p.getWidth() < x + width && p.getY() + p.getHeight() > y && p.getY() < y + p.getHeight() + 2;
     }
 
+    private void zeroSpeeds() {
+        leftSpeed = 0;
+        rightSpeed = 0;
+    }
 
     public void update(float dt) {
-//        if (this.currentYRotation < -1)
-//            this.dx = -SPEED;
-//        else if (this.currentYRotation > 1)
-//            this.dx = SPEED;
-//        else
-//            this.dx = 0;
-
         if (this.x < 0) {
-            this.dx = 0;
+            zeroSpeeds();
             this.x = 0;
         }
         if (this.x + this.width > this.screenWidth) {
-            this.dx = 0;
+            zeroSpeeds();
             this.x = this.screenWidth - this.width;
         }
 
         if (!this.frozen) {
-            if (direction.equals("right"))
+            if (direction == Direction.RIGHT)
                 this.x += this.rightSpeed * dt;
-            else if (direction.equals("left"))
+            else if (direction == Direction.LEFT)
                 this.x += this.leftSpeed * dt;
         }
     }

@@ -28,8 +28,7 @@ public class Popcorn {
         this.height = bitmap.getHeight();
         setPosition((int)(Math.random() * (screenWidth - width)), -height);
         this.dx = 0;
-        this.dy = 75;
-        System.out.println("New Popcorn created");
+        this.dy = 200;
     }
 
     public void setPosition(int x, int y) {
