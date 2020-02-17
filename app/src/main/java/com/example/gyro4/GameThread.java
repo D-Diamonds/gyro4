@@ -1,17 +1,12 @@
 package com.example.gyro4;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 
-
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
-
+@SuppressWarnings("WeakerAccess")
 public class GameThread extends Thread implements SurfaceHolder.Callback {
 
     private SurfaceHolder surfaceHolder;
@@ -20,7 +15,7 @@ public class GameThread extends Thread implements SurfaceHolder.Callback {
     private long lastTime;
     private boolean running;
 
-    public GameThread(SurfaceHolder holder, Context context, Handler handler, View view) {
+    public GameThread(SurfaceHolder holder, Context context, View view) {
         this.surfaceHolder = holder;
         this.paint = new Paint();
         this.gameState = new GameState(view, context);
@@ -30,10 +25,6 @@ public class GameThread extends Thread implements SurfaceHolder.Callback {
 
     public GameState getGameState() {
         return this.gameState;
-    }
-
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
     }
 
     public void setRunning(boolean running) {

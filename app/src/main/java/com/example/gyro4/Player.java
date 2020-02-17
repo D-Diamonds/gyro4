@@ -2,14 +2,13 @@ package com.example.gyro4;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+@SuppressWarnings("WeakerAccess")
 public class Player {
 
     private int screenWidth;
-    private int screenHeight;
     private int width;
     private int height;
     private Bitmap sprite;
@@ -27,9 +26,8 @@ public class Player {
     private boolean frozen;
 
 
-    public Player(int screenWidth, int screenHeight, int x, int y, Bitmap bitmap) {
+    public Player(int screenWidth, int x, int y, Bitmap bitmap) {
         this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
         this.sprite = bitmap;
         this.width = bitmap.getWidth();
         this.height = bitmap.getHeight();
@@ -38,7 +36,7 @@ public class Player {
         this.frozen = false;
     }
 
-    public void setPosition(int x, int y) {
+    private void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }

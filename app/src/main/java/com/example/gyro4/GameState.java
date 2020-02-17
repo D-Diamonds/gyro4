@@ -1,6 +1,5 @@
 package com.example.gyro4;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -9,22 +8,22 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.view.View;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
+
+@SuppressWarnings("WeakerAccess")
 public class GameState {
 
     private int screenWidth;
     private int screenHeight;
-    private View view;
+    private View gameView;
     private Context context;
     private Player player;
 
-    private ArrayList<Popcorn> popcorns;
-    private Bitmap spriteBmap;
+    private ArrayList<Popcorn> popcorn;
+    private Bitmap spriteBitmap;
     private float popcornSpawnTimer = 0;
 
     private int score = 0;
@@ -35,82 +34,96 @@ public class GameState {
     private float gameTimer = 0;
     private String username;
 
+    private boolean playing;
+
     private final int GAME_TIME = 60;
 
 
     public GameState(View view, Context context) {
-        this.view = view;
         this.context = context;
-        this.screenWidth = view.findViewById(R.id.gameView).getWidth();
-        this.screenHeight = view.findViewById(R.id.gameView).getHeight();
+        gameView = view.findViewById(R.id.gameView);
+        
+        screenWidth = gameView.getWidth();
+        screenHeight = gameView.getHeight();
         popcornSprite = new Bitmap[]{BitmapFactory.decodeResource(context.getResources(), R.drawable.popcorn_1), BitmapFactory.decodeResource(context.getResources(), R.drawable.popcorn_2), BitmapFactory.decodeResource(context.getResources(), R.drawable.popcorn_3)};
-        spriteBmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty_bucket);
-        this.player = new Player(this.screenWidth, this.screenHeight, this.screenWidth / 2 - spriteBmap.getWidth() / 2, this.screenHeight - spriteBmap.getHeight() * 4 / 3, spriteBmap);
-        this.popcorns = new ArrayList<>();
-        this.username = ((gameActivity) context).getUsername();
-
+        spriteBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty_bucket);
+        player = new Player(screenWidth,screenWidth / 2 - spriteBitmap.getWidth() / 2, screenHeight - spriteBitmap.getHeight() * 4 / 3, spriteBitmap);
+        popcorn = new ArrayList<>();
+        username = ((GameActivity) context).getUsername();
+        playing = true;
     }
 
     public Player getPlayer() {
-        return this.player;
+        return player;
     }
 
-    public void incrementScore() {
+    private void incrementScore() {
         score++;
-        ((GameView) view.findViewById(R.id.gameView)).setText(R.id.score, "Popcorn collected: \n" + score);
+        ((GameView) gameView).setText(R.id.score, "Popcorn collected: \n" + score);
     }
 
-    public void incremementMissed() {
+    private void incrementMissed() {
         missed++;
-        ((GameView) view.findViewById(R.id.gameView)).setText(R.id.missed, "Popcorn missed: \n" + missed);
+        ((GameView) gameView).setText(R.id.missed, "Popcorn missed: \n" + missed);
     }
 
-    public void updateTime(float dt) {
+    private void updateTime(float dt) {
         gameTimer += dt;
-        ((GameView) view.findViewById(R.id.gameView)).setText(R.id.timer, "Time remaining: " + (int) (GAME_TIME - gameTimer));
+        ((GameView) gameView).setText(R.id.timer, "Time remaining: " + (int) (GAME_TIME - gameTimer));
+    }
+
+    private void endGame() {
+        playing = false;
+        SharedPreferences preferences = context.getSharedPreferences("GyroData", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        int pastScore = preferences.getInt(username, -1);
+        if (score > pastScore)
+            editor.putInt(username, score);
+        editor.apply();
+
+        ((GameActivity) context).gameOver(score, (GameActivity) context);
     }
 
     public void update(float dt) {
-        popcornSpawnTimer += dt;
-        updateTime(dt);
-        if (gameTimer > GAME_TIME) {
-            SharedPreferences preferences = context.getSharedPreferences("GyroData", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putInt(username, score);
-            editor.apply();
-            ((GameThread)((GameView) view.findViewById(R.id.gameView)).getThread()).setRunning(false);
-            ((Activity)context).finish();
+        if (playing) {
+            updateTime(dt);
+            player.update(dt);
         }
+        if (playing && gameTimer > GAME_TIME) {
+            endGame();
+        }
+
+        popcornSpawnTimer += dt;
         if (popcornSpawnTimer > 1.5) {
-            popcorns.add(new Popcorn(this.screenWidth, this.screenHeight, popcornSprite[(int) (Math.random() * popcornSprite.length)]));
+            popcorn.add(new Popcorn(screenWidth, popcornSprite[(int) (Math.random() * popcornSprite.length)]));
             popcornSpawnTimer = 0;
         }
 
-        for (int i = 0; i < popcorns.size(); i++) {
-            popcorns.get(i).update(dt);
-            if (player.collides(popcorns.get(i))) {
-                incrementScore();
-                popcorns.remove(i);
-                i--;
-                continue;
-            }
-            if (popcorns.get(i).getY() > this.screenHeight - spriteBmap.getHeight()) {
-                incremementMissed();
-                popcorns.remove(i);
-                i--;
-                continue;
+        for (int i = 0; i < popcorn.size(); i++) {
+            popcorn.get(i).update(dt);
+            if (playing) {
+                if (player.collides(popcorn.get(i))) {
+                    incrementScore();
+                    popcorn.remove(i);
+                    i--;
+                    continue;
+                }
+                if (popcorn.get(i).getY() > screenHeight - spriteBitmap.getHeight()) {
+                    incrementMissed();
+                    popcorn.remove(i);
+                    i--;
+                }
             }
         }
-
-        this.player.update(dt);
     }
 
 
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        this.player.draw(canvas, paint);
+        if (playing)
+            player.draw(canvas, paint);
 
-        for (Popcorn popcorn : popcorns)
+        for (Popcorn popcorn : popcorn)
             popcorn.draw(canvas, paint);
     }
 }
