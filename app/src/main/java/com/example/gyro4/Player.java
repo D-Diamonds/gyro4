@@ -50,8 +50,8 @@ public class Player {
     }
 
     public void updatePlayerGyroscope(float zAxisChange, float yAxisChange) {
-        zAxisChange *= 250;
-        yAxisChange *= 250;
+        zAxisChange *= 400;
+        yAxisChange *= 400;
         boolean negative = false;
         boolean zAxisMagLarger = false;
         if (Math.abs(zAxisChange) > Math.abs(yAxisChange))
