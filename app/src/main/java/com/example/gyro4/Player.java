@@ -49,23 +49,34 @@ public class Player {
         this.frozen = false;
     }
 
-    public void updatePlayerGyroscope(float zAxisChange) {
+    public void updatePlayerGyroscope(float zAxisChange, float yAxisChange) {
         zAxisChange *= 250;
-        if (zAxisChange > 100) {
+        yAxisChange *= 250;
+        boolean negative = false;
+        boolean zAxisMagLarger = false;
+        if (Math.abs(zAxisChange) > Math.abs(yAxisChange))
+            zAxisMagLarger = true;
+        if (zAxisMagLarger && zAxisChange < 0)
+            negative = true;
+        else if (!zAxisMagLarger && yAxisChange < 0)
+            negative = true;
+        float resultantMag = (float) Math.sqrt(zAxisChange*zAxisChange + yAxisChange*yAxisChange);
+
+        if (!negative && resultantMag > 100) {
             if (direction == Direction.LEFT) {
                 zeroSpeeds();
             }
             direction = Direction.RIGHT;
-            if (zAxisChange > rightSpeed)
-                rightSpeed = zAxisChange;
+            if (resultantMag > rightSpeed)
+                rightSpeed = resultantMag;
         }
-        if (zAxisChange < -100) {
+        if (negative && -resultantMag < -100) {
             if (direction == Direction.RIGHT) {
                 zeroSpeeds();
             }
             direction = Direction.LEFT;
-            if (Math.abs(zAxisChange) > Math.abs(leftSpeed))
-                leftSpeed = zAxisChange;
+            if (resultantMag > Math.abs(leftSpeed))
+                leftSpeed = -resultantMag;
         }
     }
 

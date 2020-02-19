@@ -15,13 +15,13 @@ public class Popcorn {
     private float dx;
     private float dy;
 
-    public Popcorn(int screenWidth, Bitmap bitmap) {
+    public Popcorn(int screenWidth, Bitmap bitmap, float dy) {
         this.sprite = bitmap;
         this.width = bitmap.getWidth();
         this.height = bitmap.getHeight();
         setPosition((int)(Math.random() * (screenWidth - width)), -height);
         this.dx = 0;
-        this.dy = 200;
+        this.dy = dy;
     }
 
     private void setPosition(int x, int y) {

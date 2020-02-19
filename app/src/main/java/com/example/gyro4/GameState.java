@@ -28,6 +28,9 @@ public class GameState {
 
     private int score = 0;
     private int missed = 0;
+    private double spawnSpeed;
+    private float popcornSpeed;
+    private int level = 1;
 
     private Bitmap[] popcornSprite;
 
@@ -51,6 +54,8 @@ public class GameState {
         popcorn = new ArrayList<>();
         username = ((GameActivity) context).getUsername();
         playing = true;
+        spawnSpeed = 1.5;
+        popcornSpeed = 200;
     }
 
     public Player getPlayer() {
@@ -92,10 +97,15 @@ public class GameState {
         if (playing && gameTimer > GAME_TIME) {
             endGame();
         }
+        if (((int) gameTimer) / 10  == level) {
+            level++;
+            spawnSpeed *= .8;
+            popcornSpeed *= 1.1;
+        }
 
         popcornSpawnTimer += dt;
-        if (popcornSpawnTimer > 1.5) {
-            popcorn.add(new Popcorn(screenWidth, popcornSprite[(int) (Math.random() * popcornSprite.length)]));
+        if (popcornSpawnTimer > spawnSpeed) {
+            popcorn.add(new Popcorn(screenWidth, popcornSprite[(int) (Math.random() * popcornSprite.length)], popcornSpeed));
             popcornSpawnTimer = 0;
         }
 
