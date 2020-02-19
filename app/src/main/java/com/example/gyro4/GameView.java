@@ -52,7 +52,7 @@ public class GameView extends SurfaceView implements SensorEventListener, View.O
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE && event.values[2] != 0) {
-            if (this.thread.getGameState() != null)
+            if (this.thread != null && this.thread.getGameState() != null)
                 this.thread.getGameState().getPlayer().updatePlayerGyroscope(-event.values[2]);
 
         }

@@ -50,8 +50,8 @@ public class Player {
     }
 
     public void updatePlayerGyroscope(float zAxisChange) {
-        zAxisChange *= 150;
-        if (zAxisChange > 0) {
+        zAxisChange *= 250;
+        if (zAxisChange > 100) {
             if (direction == Direction.LEFT) {
                 zeroSpeeds();
             }
@@ -59,7 +59,7 @@ public class Player {
             if (zAxisChange > rightSpeed)
                 rightSpeed = zAxisChange;
         }
-        if (zAxisChange < 0) {
+        if (zAxisChange < -100) {
             if (direction == Direction.RIGHT) {
                 zeroSpeeds();
             }

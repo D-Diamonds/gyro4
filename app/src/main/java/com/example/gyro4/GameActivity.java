@@ -13,7 +13,10 @@ import android.os.Bundle;
     This activity handles the game state. The game works by providing the player with 60 seconds to collect as much of the
     falling popcorn as possible. The popcorn must be caught in a certain "bounding box" of the sprite for a collection to be
     added. When the time runs out an alert is displayed with the player's score and an option to either play again
-    or return to the MainActivity
+    or return to the MainActivity.
+
+    Note: *Gyroscope has funky behaviour on motions that are too "hard" so expect odd movement of the player
+    if you slam the phone.
  */
 
 public class GameActivity extends AppCompatActivity {
