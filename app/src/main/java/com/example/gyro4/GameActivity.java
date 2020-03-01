@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -48,6 +49,18 @@ public class GameActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                                 ((GameThread)((GameView) findViewById(R.id.gameView)).getThread()).setRunning(false);
+                                finish();
+                            }
+                        });
+                builder.setNeutralButton("Share",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                ((GameThread)((GameView) findViewById(R.id.gameView)).getThread()).setRunning(false);
+                                Intent sendData = new Intent(Intent.ACTION_SEND);
+                                sendData.setType("text/plain");
+                                sendData.putExtra(Intent.EXTRA_TEXT, "I collected " + score + " popcorn in the Gyro Popcorn game!");
+                                startActivity(Intent.createChooser(sendData, "Share via"));
                                 finish();
                             }
                         });
