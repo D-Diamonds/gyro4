@@ -39,7 +39,7 @@ public class GameState {
 
     private boolean playing;
 
-    private final int GAME_TIME = 2;
+    private final int GAME_TIME = 60;
 
 
     public GameState(View view, Context context) {
