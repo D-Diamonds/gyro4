@@ -32,8 +32,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             username.setText("");
             return;
         }
-        if (v.getId() == R.id.leaderboardBtn)
+        else if (v.getId() == R.id.leaderboardBtn)
             startActivity(new Intent(this, LeaderboardActivity.class));
+        else if (v.getId() == R.id.achievementBtn)
+            startActivity(new Intent(this, AchievementsActivity.class));
     }
 
     @Override
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.startBtn).setOnClickListener(this);
         findViewById(R.id.leaderboardBtn).setOnClickListener(this);
+        findViewById(R.id.achievementBtn).setOnClickListener(this);
     }
 
 }

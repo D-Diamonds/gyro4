@@ -11,6 +11,7 @@ import android.graphics.PorterDuff;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 
 @SuppressWarnings("WeakerAccess")
@@ -39,13 +40,16 @@ public class GameState {
 
     private boolean playing;
 
-    private final int GAME_TIME = 60;
+    private final int GAME_TIME = 30;
+
+    private DataSaver<AchievementSystem> dataSaver;
+    private AchievementSystem achievementSystem;
 
 
     public GameState(View view, Context context) {
         this.context = context;
         gameView = view.findViewById(R.id.gameView);
-        
+        createDataSaver();
         screenWidth = gameView.getWidth();
         screenHeight = gameView.getHeight();
         popcornSprite = new Bitmap[]{BitmapFactory.decodeResource(context.getResources(), R.drawable.popcorn_1), BitmapFactory.decodeResource(context.getResources(), R.drawable.popcorn_2), BitmapFactory.decodeResource(context.getResources(), R.drawable.popcorn_3)};
@@ -60,6 +64,16 @@ public class GameState {
 
     public Player getPlayer() {
         return player;
+    }
+
+
+    // creates DataSaver
+    public void createDataSaver() {
+        achievementSystem = new AchievementSystem();
+        dataSaver = new DataSaver<>(context.getApplicationContext(), "achievementData.obj", achievementSystem);
+        achievementSystem = dataSaver.onStart();
+        if (achievementSystem == null)
+            achievementSystem = new AchievementSystem();
     }
 
     private void incrementScore() {
@@ -78,6 +92,17 @@ public class GameState {
     }
 
     private void endGame() {
+
+        if (!AchievementSystem.getAchievementValue("Addicted")) {
+            AchievementSystem.incAchProgress("Addicted");
+            System.out.println(achievementSystem.toString());
+            dataSaver.save();
+        }
+        if (!AchievementSystem.getAchievementValue("Popcorn Connoisseur") && missed == 0) {
+            AchievementSystem.incAchProgress("Popcorn Connoisseur");
+            System.out.println(achievementSystem.toString());
+            dataSaver.save();
+        }
         playing = false;
         SharedPreferences preferences = context.getSharedPreferences("GyroData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -113,6 +138,16 @@ public class GameState {
             popcorn.get(i).update(dt);
             if (playing) {
                 if (player.collides(popcorn.get(i))) {
+                    if (!AchievementSystem.getAchievementValue("Movie Time")) {
+                        AchievementSystem.incAchProgress("Movie Time");
+                        System.out.println(achievementSystem.toString());
+                        dataSaver.save();
+                    }
+                    if (!AchievementSystem.getAchievementValue("Super Hungry")) {
+                        AchievementSystem.incAchProgress("Super Hungry");
+                        System.out.println(achievementSystem.toString());
+                        dataSaver.save();
+                    }
                     incrementScore();
                     popcorn.remove(i);
                     i--;
