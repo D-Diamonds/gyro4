@@ -18,6 +18,9 @@ import android.os.Bundle;
 
     Note: *Gyroscope has funky behaviour on motions that are too "hard" so expect odd movement of the player
     if you slam the phone.
+
+    Once the GameState ends an option for the user to share their score is displayed as seen in
+    gameOVer() with an Alertdialog
  */
 
 public class GameActivity extends AppCompatActivity {

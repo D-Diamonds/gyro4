@@ -13,10 +13,10 @@ public class AchievementSystem implements Serializable {
 
     public AchievementSystem() {
         achievements = new HashMap<>();
-        achievements.put(new Achievement("Movie Time", "Catch 1 Popcorn", 1), false);
-        achievements.put(new Achievement("Addicted", "Play 10 Games", 10), false);
-        achievements.put(new Achievement("Super Hungry", "Catch 100 Popcorn", 100), false);
-        achievements.put(new Achievement("Popcorn Connoisseur","Win without missing any Popcorn", 1), false);
+        achievements.put(new Achievement("Movie Time", "Catch 1 Popcorn", 1, R.drawable.popcorn_1), false);
+        achievements.put(new Achievement("Addicted", "Play 10 Games", 10, R.drawable.badge), false);
+        achievements.put(new Achievement("Super Hungry", "Catch 100 Popcorn", 100, R.drawable.popcorn_2), false);
+        achievements.put(new Achievement("Popcorn Connoisseur","Win without missing\nany Popcorn", 1, R.drawable.popcorn_3), false);
     }
 
     public static HashMap<Achievement, Boolean> getAchievements() {

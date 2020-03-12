@@ -9,6 +9,7 @@ public class Achievement implements Serializable {
     private String description;
     private int progress;
     private int maxProgress;
+    private int imageID;
 
     public Achievement(String name) {
         this.name = name;
@@ -17,11 +18,16 @@ public class Achievement implements Serializable {
         maxProgress = 1;
     }
 
-    public Achievement(String name, String description, int maxProgress) {
+    public Achievement(String name, String description, int maxProgress, int imageID) {
         this.name = name;
         this.description = description;
         this.maxProgress = maxProgress;
         progress = 0;
+        this.imageID = imageID;
+    }
+
+    public int getImageID() {
+        return imageID;
     }
 
     public void incrementProgress() {

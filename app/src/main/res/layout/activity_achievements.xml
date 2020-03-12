@@ -23,12 +23,15 @@
 
             <HorizontalScrollView
                 android:id="@+id/ach1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fillViewport="false">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -41,18 +44,23 @@
                         android:id="@+id/textach1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView" />
+                        android:layout_margin="20dp"
+                        android:text="TextView"
+                        android:textSize="24sp" />
                 </LinearLayout>
             </HorizontalScrollView>
 
             <HorizontalScrollView
                 android:id="@+id/ach2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fillViewport="false">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -65,18 +73,23 @@
                         android:id="@+id/textach2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView" />
+                        android:layout_margin="20dp"
+                        android:text="TextView"
+                        android:textSize="24sp" />
                 </LinearLayout>
             </HorizontalScrollView>
 
             <HorizontalScrollView
                 android:id="@+id/ach3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fillViewport="false">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -89,18 +102,23 @@
                         android:id="@+id/textach3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView" />
+                        android:layout_margin="20dp"
+                        android:text="TextView"
+                        android:textSize="24sp" />
                 </LinearLayout>
             </HorizontalScrollView>
 
             <HorizontalScrollView
                 android:id="@+id/ach4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fillViewport="false">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -113,7 +131,9 @@
                         android:id="@+id/textach4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView" />
+                        android:layout_margin="20dp"
+                        android:text="TextView"
+                        android:textSize="24sp" />
                 </LinearLayout>
             </HorizontalScrollView>
 

@@ -47,6 +47,7 @@ public class DataSaver<Object> {
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             dataPointer = (Object) objectInputStream.readObject();
             fileInputStream.close();
+            System.out.println("Done loading object");
             return dataPointer;
         }
         catch (IOException | ClassNotFoundException e) {
